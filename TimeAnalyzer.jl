@@ -1,5 +1,9 @@
 include("Functions.jl")
 
+# using Pkg
+# Pkg.add("Plots")
+using Plots
+
 file = open("/home/denes/Documents/Drem/pH_mero/TimeAnalyzer/data/beallas_pH5-6_PI7.csv")
 line = readline(file)
 line = readline(file)
@@ -43,3 +47,19 @@ smoothedValueList = gaussianSmooth(100,30,dataList)
 doubleSmoothedValueList = gaussianSmooth(500,1000,smoothedValueList)
 derivativeList = getDerivativeFunction(doubleSmoothedValueList, timeList)
 smoothedDerivativeList = gaussianSmooth(2000, 2000, derivativeList)
+
+setinTimeSec = calculateSetinTime(smoothedDerivativeList, timeList, 7000)
+setinTimeMin = setinTimeSec / 60
+
+plot(timeList, dataList, ylims = (-0.02, 0.06), color = "grey", linewidth = 1.0, xlabel = "time (s)", ylabel = "value (V)", label = "original")
+plot!(timeList, smoothedValueList, color = "blue", label = "smoothed")
+plot!(timeList, doubleSmoothedValueList, color = "red", label = "doublesmoothed")
+
+timeListLength = length(timeList)
+zeroList = zeros(timeListLength - 1)
+
+deleteat!(timeList, timeListLength)
+
+plot(timeList, derivativeList, color = "blue", linewidth = 1.0, xlabel = "time (s)", ylabel = "derivatives", label = "derivatives")
+plot!(timeList, smoothedDerivativeList, color = "red", linewidth = 1.0, label = "smoothed derivatives")
+plot!(timeList, zeroList, color = "black", linewidth = 1.0, label = "reference zero")
