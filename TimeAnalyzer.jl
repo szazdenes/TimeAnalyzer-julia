@@ -14,17 +14,18 @@ timeInterval = parse(Float64, lineList[3])
 dataList = []
 timeList = []
 
+push!(timeList, timeInterval)
 push!(dataList, parse(Float64, lineList[5]))
 
-counter = 0
+counter = 1
 
 for line in eachline(file)
     global counter
     global timeInterval
     global timeList
     global dataList
-    counter = counter + 1
-    if counter % 1 == 0
+    counter += 1
+    if counter % 500 == 0
         if occursin(";", line)
             replace!(line, "," => ".")
             replace!(line, ";" => ",")
@@ -37,3 +38,8 @@ for line in eachline(file)
 end
 
 close(file)
+
+smoothedValueList = gaussianSmooth(100,30,dataList)
+doubleSmoothedValueList = gaussianSmooth(500,1000,smoothedValueList)
+derivativeList = getDerivativeFunction(doubleSmoothedValueList, timeList)
+smoothedDerivativeList = gaussianSmooth(2000, 2000, derivativeList)
