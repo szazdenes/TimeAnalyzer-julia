@@ -8,8 +8,8 @@ file = open("E:/Denes/Poma/pH_mero/beallas_pH5-6_PI7_11.20.csv")
 line = readline(file)
 line = readline(file)
 if occursin(";", line)
-    line = replace(line, raw"," => ".")
-    line = replace(line, raw";" => raw",")
+    line = replace(line, "," => ".")
+    line = replace(line, ";" => ",")
 end
 
 lineList = split(line, ",")
