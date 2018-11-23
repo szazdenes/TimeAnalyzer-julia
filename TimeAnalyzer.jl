@@ -4,12 +4,12 @@ include("Functions.jl")
 # Pkg.add("Plots")
 using Plots
 
-file = open("/home/denes/Documents/Drem/pH_mero/TimeAnalyzer/data/beallas_pH5-6_PI7.csv")
+file = open("E:/Denes/Poma/pH_mero/beallas_pH5-6_PI7_11.20.csv")
 line = readline(file)
 line = readline(file)
 if occursin(";", line)
-    replace!(line, "," , ".")
-    replace!(line, ";", ",")
+    line = replace(line, raw"," => ".")
+    line = replace(line, raw";" => raw",")
 end
 
 lineList = split(line, ",")
@@ -31,8 +31,8 @@ for line in eachline(file)
     counter += 1
     if counter % 500 == 0
         if occursin(";", line)
-            replace!(line, "," => ".")
-            replace!(line, ";" => ",")
+            line = replace(line, "," => ".")
+            line = replace(line, ";" => ",")
         end
         lineList = split(line, ",")
         dataValue = parse(Float64, lineList[5])
